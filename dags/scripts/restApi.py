@@ -33,5 +33,5 @@ def get_repo_order_stars(per_page: int = 10) -> List[dict]:
         return put_key(data["items"])
     else:
         print(str(response.status_code) )
-        return response.json()
+        response.raise_for_status() #хз
 
