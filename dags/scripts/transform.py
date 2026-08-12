@@ -48,3 +48,18 @@ def forks_to_stars():
     forks_stars.show()
 
     spark.stop()
+
+def dynamics_stars():
+    """
+    select owner_login, created_at, stars, coalesce(stars - lag(stars) over(partition by id order by created_at ), 0) as cnt_stars
+    from repo
+    order by owner_login, created_at;
+    """
+    spark = SparkSession.builder.master("local[*]").appName('Transform_repo') \
+        .config("spark.jars.packages", "org.postgresql:postgresql:42.7.1").getOrCreate()
+
+    df = spark.read.jdbc(JDBC_URL, DBTABLE, properties=properties)
+
+    
+
+    spark.stop()
