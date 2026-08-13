@@ -18,5 +18,5 @@ def replace_repo(ti):
 
     engine = create_engine(URL_DB)
     df = pandas.DataFrame(data)
-    df.to_sql('repo', engine, if_exists='replace')
+    df.to_sql('repo', engine, if_exists='append', index=False)
 

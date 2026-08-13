@@ -5,7 +5,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from yaml import safe_load
 
-from scripts import get_repo_order_stars, replace_repo, sum_stars, forks_to_stars
+from scripts import get_repo_order_stars, replace_repo, transform_data
 
 CONFIG_PATH = Path(__file__).resolve().parent / 'config.yml'
 def load_config():
@@ -23,17 +23,16 @@ with DAG(
     get_repo = PythonOperator(
         task_id="get_repo",
         python_callable=get_repo_order_stars,
-        op_args=[int(load_config()['n'])]
+        op_kwargs={ 'per_page': int(load_config()['n']),
+                    'logical_date': '{{ ts }}'}
     )
 
     replace_repo_db = PythonOperator(task_id="replace_repo_db",
                                      python_callable=replace_repo,
                                      do_xcom_push=True)
 
-    transform_data_stars = PythonOperator(task_id="transform_data_stars",
-                                    python_callable=sum_stars)
-    transform_data_fork = PythonOperator(task_id="transform_data_fork",
-                                    python_callable=forks_to_stars)
+    transform = PythonOperator(task_id="transform",
+                                    python_callable=transform_data)
 
-    get_repo >> replace_repo_db >> transform_data_stars >> transform_data_fork
+    get_repo >> replace_repo_db >> transform
 
