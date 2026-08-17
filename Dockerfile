@@ -18,4 +18,4 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 USER airflow
 
 # Устанавливаем PySpark
-RUN pip install --no-cache-dir pyspark==3.5.0
+RUN pip install --no-cache-dir "apache-airflow[apache.spark]" pyspark==3.5.0
