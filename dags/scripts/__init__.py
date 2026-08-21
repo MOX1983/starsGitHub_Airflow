@@ -3,3 +3,4 @@ from .database import replace_repo
 from .transform import transform_data
 
 from .data_generation import generation
+from .silver import silver_processing

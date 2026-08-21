@@ -14,3 +14,11 @@ with DAG(
         application="/opt/airflow/dags/scripts/data_generation.py",
         conn_id="spark_default"
     )
+
+    silver = SparkSubmitOperator(
+        task_id='silver',
+        application="/opt/airflow/dags/scripts/silver.py",
+        conn_id="spark_default"
+    )
+
+    generation >> silver
